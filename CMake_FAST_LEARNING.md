@@ -56,20 +56,6 @@ C、使用make命令进行编译。
 
 
 
-#### target_include_directories
-
-添加include 文件夹到target
-
-```cmake
-target_include_directories(<target> [SYSTEM] [BEFORE]
-  <INTERFACE|PUBLIC|PRIVATE> [items1...]
-  [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
-```
-
-<target> 必须是已经被add_excutable or add_library 创建过
-
-
-
 
 
 #### include_directories 让CMake找到我的头文件
@@ -201,7 +187,7 @@ set(PLUGIN_SOURCES
 
 https://www.cnblogs.com/coderfenghc/archive/2012/07/14/2591135.html
 
-```
+```cmake
 find_library (
           <VAR>
           name | NAMES name1 [name2 ...] [NAMES_PER_DIR]
@@ -256,13 +242,50 @@ Ex
 
 
 
-#### target_link_libraries 告诉CMakeMake要链接哪一个库文件
+#### target_include_directories 添加include路径 文件夹到target
+
+```cmake
+target_include_directories(<target> [SYSTEM] [BEFORE]
+  <INTERFACE|PUBLIC|PRIVATE> [items1...]
+  [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
+```
+
+- <target> 目标文件必须是已经被add_excutable or add_library 创建过的， 并且不能被IMPORTED修饰
+
+- <INTERFACE|PUBLIC|PRIVATE> : 关键字INTERFACE，PUBLIC和PRIVATE指定它后面参数的作用域。PRIVATE和PUBLIC项会填充targe目标文件的INCLUDE_DIRECTORIES属性。PUBLIC和INTERFACE项会填充target目标文件的INTERFACE_INCLUDE_DIRECTORIES属性。随后的参数指定包含目录。
+
+
+
+#### target_link_libraries 告诉CMakeMake 目标要链接哪一个库文件
 
 `arget_link_libraries(<target> [item1 [item2 [...]]] [[debug|optimized|general] <item>] …)`
 
 Ex.
 
 `target_link_libraries(${PROJECT_NAME} util)` : 主要是名字叫${PROJECT_NAME} 这个target需要链接util这个库
+
+
+
+EX.
+
+```cmake
+#先将importer源文件都存储到IMPORTER_SOURCES这个变量
+set(IMPORTER_SOURCES
+  NvOnnxParser.cpp
+  ModelImporter.cpp
+  builtin_op_importers.cpp
+  onnx2trt_utils.cpp
+  ShapedWeights.cpp
+  OnnxAttrs.cpp
+)
+
+add_library(nvonnxparser SHARED ${IMPORTER_SOURCES}) #建立动态库
+target_include_directories(nvonnxparser PUBLIC ${CUDA_INCLUDE_DIRS} ${ONNX_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR} ${CUDNN_INCLUDE_DIR}) #库作为目标， 作用域为Public
+target_link_libraries(nvonnxparser PUBLIC onnx_proto nvonnxparser_plugin ${PROTOBUF_LIBRARY} ${CUDNN_LIBRARY} ${TENSORRT_LIBRARY}) 
+#目标nvonnxparser连接onnx_proto nvonnxparser_plugin 等库
+```
+
+
 
 
 
