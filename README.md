@@ -1,0 +1,2 @@
+# CMAKE_FAST_LEARNING
+最快速度查阅函数用法
