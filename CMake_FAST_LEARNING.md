@@ -1,7 +1,5 @@
 <h1 align = center>CMake FAST LEARNING</h1>
-<h4 align = right>update 2020.1.22</h4>
-
-
+<h4 align = right>update 2020.2.1</h4>
 
 查阅Cmake官方太慢， 还是按照自己的笔记来吧….
 
@@ -10,14 +8,15 @@
 > 1. 介绍
 > 2. 基础函数
 > 3. 进阶
-> 4. CUDA 编译
-> 5. 参考资料
+> 4. 指定输出路径
+> 5. CUDA 编译
+> 6. 参考资料
 
 
 
 
 
-<h3 align=center>介绍</h3>
+> <h3 align=center>介绍</h3>
 
 CMake是一个比Make工具更高级的编译配置工具，是一个跨平台的、开源的构建系统（BuildSystem）。CMake允许开发者编写一种平台无关的CMakeList.txt文件来定制整个编译流程， 然后再根据目标用户的平台进一步生成所需的本地化Makefile和工程文件
 
@@ -40,7 +39,7 @@ C、使用make命令进行编译。
 
 
 
-<h3 align=center>基础函数</h3>
+> <h3 align=center>基础函数</h3>
 
 ------
 
@@ -251,7 +250,6 @@ target_include_directories(<target> [SYSTEM] [BEFORE]
 ```
 
 - <target> 目标文件必须是已经被add_excutable or add_library 创建过的， 并且不能被IMPORTED修饰
-
 - <INTERFACE|PUBLIC|PRIVATE> : 关键字INTERFACE，PUBLIC和PRIVATE指定它后面参数的作用域。PRIVATE和PUBLIC项会填充targe目标文件的INCLUDE_DIRECTORIES属性。PUBLIC和INTERFACE项会填充target目标文件的INTERFACE_INCLUDE_DIRECTORIES属性。随后的参数指定包含目录。
 
 
@@ -379,7 +377,7 @@ make #开始build
 
 ------
 
-<h3 align=center id="">进阶</h3>
+> <h3 align=center id="">进阶</h3>
 
 #### file()
 
@@ -396,6 +394,22 @@ file(GLOB CPP_SRC src/*.cpp)
 ```
 
 主要是将src资料下所有cpp文件存储到CPP_SRC变量中
+
+
+
+#### list()
+
+官方 https://cmake.org/cmake/help/v3.16/command/list.html?highlight=list
+
+主要可分为read / search / modification / ordering作用
+
+每种都有各自的操作
+
+Ex.
+
+```
+list(APPEND <list> [<element> ...])
+```
 
 
 
@@ -451,6 +465,64 @@ if(USE_ARM64)
     add_definitions (-std=c++11 -O2 -fomit-frame-pointer -g -Wall)
     MESSAGE (STATUS "Build Option: -std=c++11 -O2 -fomit-frame-pointer -g -Wall")
 else()
+```
+
+------
+
+> <h3 align=center id="">输出指定目录</h3>
+>
+> 参考 [https://zh.wikibooks.org/zh-tw/CMake_%E5%85%A5%E9%96%80/%E8%BC%B8%E5%87%BA%E4%BD%8D%E7%BD%AE%E8%88%87%E5%AE%89%E8%A3%9D](https://zh.wikibooks.org/zh-tw/CMake_入門/輸出位置與安裝)
+>
+> 主要设定编译完成后的这种库的存放位置
+
+
+
+
+
+**CMAKE_LIBRARY_OUTPUT_DIRECTORY**
+
+```
+CMAKE_LIBRARY_OUTPUT_DIRECTORY
+```
+
+可以存储 当动态库(.so)建立完成时 所存放的路径
+
+Ex.
+
+```cmake
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+```
+
+这说明将生成的库存储在当前目录下的lib文件夹中， 可取代` LIBRARY_OUTPUT_DIRECTORY`
+
+**CMAKE_ARCHIVE_OUTPUT_DIRECTORY**
+
+可以以存储 当静态库(.a)建立完成时， 所存放的路径
+
+```
+CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+```
+
+Ex.
+
+```cmake
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+```
+
+
+
+**CMAKE_RUNTIME_OUTPUT_DIRECTORY**
+
+```cmake
+CMAKE_RUNTIME_OUTPUT_DIRECTORY
+```
+
+用来存储 编译完成的执行档案， 例如Win下的exe， dll档案
+
+```
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 ```
 
 
