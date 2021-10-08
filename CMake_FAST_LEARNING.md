@@ -1,5 +1,5 @@
 <h1 align = center>CMake FAST LEARNING</h1>
-<h4 align = right>update 2020.2.1</h4>
+<h4 align = right>update 2021.10.8</h4>
 
 查阅Cmake官方太慢， 还是按照自己的笔记来吧….
 
@@ -222,7 +222,50 @@ find_library(TENSORRT_LIBRARY_ONNXPARSER nvonnxparser
 ```
 
 
+#### find_package() 查找包 : 较find_library（） 强大
+调用该函数时候， 会先从cmake原生支持的module中寻找
 
+ps.CMake原生支持许多module的寻找，通过cmake –help-modul-list，可以查看，相关原生.cmake文件存放在/usr/share/cmake/Modules
+```cmake
+find_package(<PackageName> [version] [EXACT] [QUIET]
+             [REQUIRED] [[COMPONENTS] [components...]]
+             [OPTIONAL_COMPONENTS components...]
+             [CONFIG|NO_MODULE]
+             [NO_POLICY_SCOPE]
+             [NAMES name1 [name2 ...]]
+             [CONFIGS config1 [config2 ...]]
+             [HINTS path1 [path2 ... ]]
+             [PATHS path1 [path2 ... ]]
+             [PATH_SUFFIXES suffix1 [suffix2 ...]]
+             [NO_DEFAULT_PATH]
+             [NO_PACKAGE_ROOT_PATH]
+             [NO_CMAKE_PATH]
+             [NO_CMAKE_ENVIRONMENT_PATH]
+             [NO_SYSTEM_ENVIRONMENT_PATH]
+             [NO_CMAKE_PACKAGE_REGISTRY]
+             [NO_CMAKE_BUILDS_PATH] # Deprecated; does nothing.
+             [NO_CMAKE_SYSTEM_PATH]
+             [NO_CMAKE_SYSTEM_PACKAGE_REGISTRY]
+             [CMAKE_FIND_ROOT_PATH_BOTH |
+              ONLY_CMAKE_FIND_ROOT_PATH |
+              NO_CMAKE_FIND_ROOT_PATH])
+
+```
+主要用来寻找包：
+- REQUIRED 指定必须要此库， 如指定之后未找到这个库会报错
+- PATHS 可以用来指定寻找包的路径
+
+找到该package之后，会自动生成以下变量
+```
+${"PACKAGENAME"_FOUND}
+${"PACKAGENAME"_INCLUDE_DIRS}
+${"PACKAGENAME"_LIBRARIES or LIBS}
+${"PACKAGENAME"_DEFINITIONS}
+```
+Ex.
+```cmake
+find_packages(OpenCV REQUIRED PATHS /usr/local/)
+```
 
 
 
