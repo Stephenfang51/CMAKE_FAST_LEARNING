@@ -1,16 +1,24 @@
 <h1 align = center>CMake FAST LEARNING</h1>
-<h4 align = right>update 2021.10.8</h4>
+<h4 align = right>update 2022.11.3</h4>
 
 查阅Cmake官方太慢， 还是按照自己的笔记来吧….
 
 > ### 目录
 >
-> 1. 介绍
-> 2. 基础函数
-> 3. 进阶
-> 4. 指定输出路径
-> 5. CUDA 编译
-> 6. 参考资料
+ - 介绍
+
+ - 基础函数
+
+  - 命令行参数
+
+ - 进阶
+
+
+ - 指定输出路径
+
+- CUDA 编译
+
+- 参考资料
 
 
 
@@ -47,7 +55,7 @@ C、使用make命令进行编译。
 
 **#** 可用来注释
 
-#### project()
+### project()
 
 给工程取名字
 
@@ -57,7 +65,7 @@ C、使用make命令进行编译。
 
 
 
-#### include_directories 让CMake找到我的头文件
+### include_directories 让CMake找到我的头文件
 
 把当前目录下的添加Include 文件夹 to the build
 
@@ -73,7 +81,7 @@ Ex
 
 
 
-#### aux_source_directory 让CMake找到我的源文件
+### aux_source_directory 让CMake找到我的源文件
 
 命令：`aux_source_directory(<dir> <variable>)`
 
@@ -91,7 +99,7 @@ EX.
 
 
 
-#### link_directories() 让CMake 找到我的库文件
+### link_directories() 让CMake 找到我的库文件
 
 `link_directories(directory1 directory2 …)`
 
@@ -101,7 +109,7 @@ Ex.
 
 
 
-#### add_subdirectory() 添加外部项目文件夹
+### add_subdirectory() 添加外部项目文件夹
 
 一般情况下，我们的项目各个子项目都在一个总的项目根目录下，但有的时候，我们需要使用外部的文件夹，怎么办呢？`add_subdirectory`命令，可以将指定的文件夹加到build任务列表中
 
@@ -136,7 +144,7 @@ s1下的CMakeLists.txt编写为
 4 add_subdirectory(top top)
 ```
 
-#### add_library() 新建库
+### add_library() 新建库
 
 ```
 add_library(<name> [STATIC | SHARED | MODULE]
@@ -182,7 +190,7 @@ set(PLUGIN_SOURCES
 
 
 
-#### find_library() 查找库
+### find_library() 查找库
 
 https://www.cnblogs.com/coderfenghc/archive/2012/07/14/2591135.html
 
@@ -222,7 +230,7 @@ find_library(TENSORRT_LIBRARY_ONNXPARSER nvonnxparser
 ```
 
 
-#### find_package() 查找包 : 较find_library（） 强大
+### find_package() 查找包 : 较find_library（） 强大
 调用该函数时候， 会先从cmake原生支持的module中寻找
 
 ps.CMake原生支持许多module的寻找，通过cmake –help-modul-list，可以查看，相关原生.cmake文件存放在/usr/share/cmake/Modules
@@ -270,7 +278,7 @@ find_packages(OpenCV REQUIRED PATHS /usr/local/)
 
 
 
-#### add_executable() 告诉CMake我的构建目标（生成可执行文件）
+### add_executable() 告诉CMake我的构建目标（生成可执行文件）
 
 `add_executable(<name> [WIN32] [MACOSX_BUNDLE] [EXCLUDE_FROM_ALL] source1 [source2 …])`
 
@@ -284,7 +292,7 @@ Ex
 
 
 
-#### target_include_directories 添加include路径 文件夹到target
+### target_include_directories 添加include路径 文件夹到target
 
 ```cmake
 target_include_directories(<target> [SYSTEM] [BEFORE]
@@ -297,7 +305,7 @@ target_include_directories(<target> [SYSTEM] [BEFORE]
 
 
 
-#### target_link_libraries 告诉CMakeMake 目标要链接哪一个库文件
+### target_link_libraries 告诉CMakeMake 目标要链接哪一个库文件
 
 `arget_link_libraries(<target> [item1 [item2 [...]]] [[debug|optimized|general] <item>] …)`
 
@@ -330,7 +338,7 @@ target_link_libraries(nvonnxparser PUBLIC onnx_proto nvonnxparser_plugin ${PROTO
 
 
 
-#### 传递FLAGS给C++编译器
+### 传递FLAGS给C++编译器
 
 如果想告诉CMake 在生成Makefile里告诉编译器启用C++11
 
@@ -353,7 +361,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG " )   # release包优化
 
 ### 开始建构
 
-#### 范例
+### 范例
 
 ```c++
 /Users/sunyongjian1/codes/local_codes/cmake_test tree
@@ -400,7 +408,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG " )   # release包优化
 
 
 
-#### build 方法
+### build 方法
 
 在CMakeLists.txt所在目录，新建build目录, 例如
 
@@ -418,11 +426,21 @@ make #开始build
 
 ```
 
+--- 
+> <h3 align=center id="">命令行参数</h3>
+参考 https://cmake.org/cmake/help/latest/manual/cmake.1.html
+
+举例几个常见例子
+
+`-D <var>=<value>` : 其实就是用于传入变量, 如-DQNX=1， 那么就会将1赋值给QNX传入CMakeLists文件中
+
+
+
 ------
 
 > <h3 align=center id="">进阶</h3>
 
-#### file()
+### file()
 
 **GLOB**收集文件
 
@@ -440,7 +458,7 @@ file(GLOB CPP_SRC src/*.cpp)
 
 
 
-#### list()
+### list()
 
 官方 https://cmake.org/cmake/help/v3.16/command/list.html?highlight=list
 
@@ -458,7 +476,7 @@ list(APPEND <list> [<element> ...])
 
 
 
-#### option() & add_definition()
+### option() & add_definition()
 
 两者通常搭配使用
 
@@ -578,7 +596,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 <h3 align=center id="">CUDA 编译</h3>
 
-#### CUDA编译简单范本
+### CUDA编译简单范本
 
 ```cmake
 # 按惯例，cmake的版本
@@ -615,7 +633,7 @@ TARGET_LINK_LIBRARIES(ad-census
 
 
 
-#### CUDA 编译函数
+### CUDA 编译函数
 
 
 
